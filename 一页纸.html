@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>问题排查模块 · 产品定义一页纸</title>
+<style>
+:root {
+  --primary: #2b6cb0;
+  --primary-dark: #1e4a8a;
+  --accent: #ed8936;
+  --success: #38a169;
+  --warn: #d69e2e;
+  --danger: #c53030;
+  --text: #1a202c;
+  --text-sub: #4a5568;
+  --text-light: #718096;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e0;
+  --bg: #f7fafc;
+  --meta-bg: #fafaf6;
+  --meta-border: #d4d4cf;
+  --meta-text: #6b6857;
+  --meta-tag-bg: #ebe9d9;
+  --module-color: #6b46c1;
+  --module-light: #f3f0ff;
+  --module-border: #d6bcfa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 14px; line-height: 1.6; color: var(--text); background: var(--bg);
+}
+a { color: inherit; text-decoration: none; }
+
+/* ===== 顶部导航 ===== */
+.topbar {
+  background: #fff; border-bottom: 1px solid var(--border);
+  padding: 14px 32px; display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.logo { font-size: 15px; font-weight: 600; color: var(--text-sub); }
+.logo a:hover { color: var(--primary); }
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-sub); }
+.breadcrumb-sep { color: var(--border-strong); }
+.breadcrumb-current { color: var(--module-color); font-weight: 600; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.top-link {
+  font-size: 13px; padding: 4px 10px; background: #faf5ff;
+  border-radius: 4px; color: var(--module-color);
+}
+.top-link:hover { background: #e9d8fd; }
+.user-chip {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-sub);
+}
+.user-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--module-color); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+}
+
+/* ===== 元注释 banner ===== */
+.meta-banner {
+  background: var(--meta-bg); border-bottom: 1px dashed var(--meta-border); padding: 10px 0;
+}
+.meta-banner-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 32px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.meta-tag {
+  font-size: 11px; font-weight: 600; padding: 2px 8px;
+  background: var(--meta-tag-bg); color: var(--meta-text); border-radius: 3px; letter-spacing: 0.5px;
+}
+.meta-text { font-size: 12px; color: var(--meta-text); font-style: italic; }
+.meta-paths { display: inline-flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.path-chip {
+  font-size: 11px; padding: 3px 10px;
+  background: #fff; border: 1px dashed var(--meta-border);
+  color: var(--meta-text); border-radius: 12px;
+}
+
+/* ===== 主体布局 ===== */
+.page {
+  max-width: 960px; margin: 0 auto; padding: 40px 32px 80px;
+}
+
+/* ===== 标题区 ===== */
+.page-header { margin-bottom: 32px; }
+.version-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.version-badge {
+  font-size: 11px; padding: 2px 8px; border-radius: 4px;
+  background: var(--module-light); color: var(--module-color); border: 1px solid var(--module-border);
+  font-weight: 600;
+}
+.date-text { font-size: 12px; color: var(--text-light); }
+.page-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.page-subtitle { font-size: 15px; color: var(--text-sub); font-weight: 400; line-height: 1.7; }
+.page-subtitle strong { color: var(--module-color); }
+.owner-row {
+  display: flex; align-items: center; gap: 8px; margin-top: 14px;
+  font-size: 13px; color: var(--text-sub);
+}
+.owner-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; background: var(--module-light);
+  border: 1px solid var(--module-border); border-radius: 20px;
+  color: var(--module-color); font-size: 12px; font-weight: 600;
+}
+
+/* ===== section ===== */
+.section { margin-bottom: 36px; }
+.section-title {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 2px solid var(--module-border);
+  display: flex; align-items: center; gap: 8px;
+}
+.section-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--module-color); color: #fff;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: #fff; border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px 18px; margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+
+/* ===== 两列网格 ===== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 700px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ===== 流程图 ===== */
+.flow-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  flex-wrap: wrap; margin-bottom: 8px;
+}
+.flow-step {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  min-width: 80px;
+}
+.flow-box {
+  padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  text-align: center; white-space: nowrap;
+  background: var(--module-light); color: var(--module-color);
+  border: 1px solid var(--module-border);
+}
+.flow-box.green { background: #f0fff4; color: var(--success); border-color: #9ae6b4; }
+.flow-box.orange { background: #fffaf0; color: var(--accent); border-color: #fbd38d; }
+.flow-box.gray { background: var(--bg); color: var(--text-sub); border-color: var(--border); }
+.flow-arrow {
+  font-size: 16px; color: var(--border-strong); padding-top: 10px; flex-shrink: 0;
+}
+.flow-label { font-size: 10px; color: var(--text-light); text-align: center; max-width: 80px; }
+
+/* ===== 表格 ===== */
+.spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.spec-table th {
+  background: var(--module-light); color: var(--module-color);
+  font-weight: 600; padding: 8px 12px; text-align: left;
+  border-bottom: 2px solid var(--module-border);
+}
+.spec-table td {
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  vertical-align: top; color: var(--text-sub);
+}
+.spec-table tr:last-child td { border-bottom: none; }
+.spec-table tr:hover td { background: var(--module-light); }
+
+/* ===== tag ===== */
+.tag {
+  display: inline-block; font-size: 11px; padding: 2px 8px;
+  border-radius: 10px; font-weight: 600;
+}
+.tag-must { background: #fff5f5; color: var(--danger); }
+.tag-suggest { background: #fffaf0; color: var(--accent); }
+.tag-discuss { background: var(--bg); color: var(--text-light); border: 1px solid var(--border); }
+.tag-p0 { background: #fff5f5; color: var(--danger); }
+.tag-p1 { background: #fffaf0; color: var(--accent); }
+.tag-p2 { background: #f0fff4; color: var(--success); }
+.tag-platform { background: var(--module-light); color: var(--module-color); }
+
+/* ===== 痛点对应 ===== */
+.pain-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px dashed var(--border);
+}
+.pain-item:last-child { border-bottom: none; }
+.pain-icon { font-size: 18px; flex-shrink: 0; }
+.pain-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+.pain-text span { font-size: 12px; color: var(--text-sub); }
+
+/* ===== 知识库机制 ===== */
+.kb-flow {
+  display: flex; flex-direction: column; gap: 0;
+}
+.kb-step {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 12px 0;
+}
+.kb-step:not(:last-child) { border-bottom: 1px dashed var(--border); }
+.kb-step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--module-color); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+}
+.kb-step-content strong { display: block; font-size: 13px; color: var(--text); margin-bottom: 3px; }
+.kb-step-content p { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+.kb-step-content .tag-platform { margin-right: 4px; margin-top: 4px; display: inline-block; }
+
+/* ===== 未尽事项 ===== */
+.todo-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; border-radius: 6px;
+  background: #fff; border: 1px solid var(--border); margin-bottom: 8px;
+}
+.todo-tag { flex-shrink: 0; margin-top: 1px; }
+
+/* ===== meta-note ===== */
+.meta-note {
+  margin-top: 18px; background: var(--meta-bg); border: 1px dashed var(--meta-border);
+  border-radius: 6px; padding: 10px 14px;
+  font-size: 12px; color: var(--meta-text); line-height: 1.7; font-style: italic;
+}
+.meta-note-tag {
+  display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 6px;
+  background: var(--meta-tag-bg); color: var(--meta-text);
+  border-radius: 3px; margin-right: 8px; letter-spacing: 0.5px; font-style: normal;
+}
+
+/* ===== checklist ===== */
+.checklist-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px;
+}
+.checklist-item:last-child { border-bottom: none; }
+.checklist-check {
+  width: 18px; height: 18px; border-radius: 4px;
+  border: 2px solid var(--module-border); flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s;
+}
+.checklist-check.done { background: var(--module-color); border-color: var(--module-color); color: #fff; font-size: 11px; }
+.checklist-text { flex: 1; }
+.checklist-text strong { color: var(--text); }
+.checklist-text span { display: block; font-size: 12px; color: var(--text-sub); margin-top: 2px; }
+
+/* ===== divider ===== */
+.divider { border: none; border-top: 1px dashed var(--border); margin: 32px 0; }
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<nav class="topbar">
+  <div class="topbar-left">
+    <div class="logo"><a href="https://yi0702.github.io/workspace-nexus/" target="_blank">🌐 Nexus</a></div>
+    <div class="breadcrumb">
+      <span class="breadcrumb-sep">/</span>
+      <a href="https://jiangkunjing1-dotcom.github.io/xlxx/" target="_blank" style="color:var(--text-sub);">问题排查模块</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">产品定义一页纸</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <a class="top-link" href="https://jiangkunjing1-dotcom.github.io/xlxx/" target="_blank">⚡ 查看可交互 Demo</a>
+    <div class="user-chip">
+      <div class="user-avatar">姜</div>
+      <span>姜坤婧</span>
+    </div>
+  </div>
+</nav>
+
+<!-- 元注释 -->
+<div class="meta-banner">
+  <div class="meta-banner-inner">
+    <span class="meta-tag">一页纸</span>
+    <span class="meta-text">底稿不是终稿 · 所有定义欢迎讨论共识后迭代 · 维护人：姜坤婧</span>
+    <div class="meta-paths">
+      <span class="path-chip">📋 问题排查模块</span>
+      <span class="path-chip">🤖 Knot Agent</span>
+      <span class="path-chip">📚 知识库自更新</span>
+    </div>
+  </div>
+</div>
+
+<!-- 主体 -->
+<div class="page">
+
+  <!-- 标题区 -->
+  <div class="page-header">
+    <div class="version-row">
+      <span class="version-badge">v0.1</span>
+      <span class="date-text">2026-05-28</span>
+    </div>
+    <div class="page-title">🛠️ 问题排查模块 · 产品定义</div>
+    <div class="page-subtitle">
+      让问题排查从 <strong>人肉拉群、经验口传</strong>，进化为
+      <strong>AI 辅助诊断 · 多源数据拉通 · 经验自动沉淀</strong> 的闭环系统。<br>
+      最终目标：成为一个经验丰富的 <strong>AI 排查员工</strong>，越用越聪明。
+    </div>
+    <div class="owner-row">
+      <span>模块 Owner：</span>
+      <span class="owner-badge">👤 姜坤婧 · xlxxjiang</span>
+    </div>
+  </div>
+
+  <!-- ① 现有排查流程 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="section-num">①</span>
+      现有排查流程 · 现状梳理
+    </div>
+    <div class="card">
+      <div class="flow-row" style="justify-content: flex-start; align-items: flex-start; flex-wrap: wrap; gap: 6px;">
+        <div class="flow-step">
+          <div class="flow-box gray">媒体反馈问题</div>
+          <div class="flow-label">媒体侧发现异常</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box gray">技术支持 + 运营<br>接收反馈</div>
+          <div class="flow-label">同步给产品</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box">产品自查</div>
+          <div class="flow-label">规则 / 运营标签<br>/ 千寻链路</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box orange">反馈研发</div>
+          <div class="flow-label">研发自查模版<br>及后端逻辑</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box green">反馈开发者</div>
+          <div class="flow-label">提供问题日志<br>/ 回包</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div style="background: var(--module-light); border: 1px solid var(--module-border); border-radius: 6px; padding: 10px 14px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--module-color); margin-bottom: 6px;">📋 产品自查内容</div>
+          <div style="font-size: 12px; color: var(--text-sub); line-height: 1.8;">
+            · 规则是否命中<br>
+            · 运营标签是否异常<br>
+            · 模版定位是否准确<br>
+            · 千寻：线上请求链路 / 过滤情况
+          </div>
+        </div>
+        <div style="background: #fffaf0; border: 1px solid #fbd38d; border-radius: 6px; padding: 10px 14px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px;">⚠️ 当前卡点</div>
+          <div style="font-size: 12px; color: var(--text-sub); line-height: 1.8;">
+            · 产品自查后仍未解决 → 升级研发<br>
+            · 研发查完没问题 → 升级开发者<br>
+            · 全程依赖人肉拉群，无系统化支撑
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 当前痛点 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="section-num">②</span>
+      当前痛点
+    </div>
+    <div class="card">
+      <div class="pain-item">
+        <div class="pain-icon">⚡</div>
+        <div class="pain-text">
+          <strong>突发性强，时间成本高</strong>
+          <span>问题随时出现，无预警机制；一旦出现会大量占用产品/研发时间，打断正常工作节奏</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🔭</div>
+        <div class="pain-text">
+          <strong>排查范围广，定位难</strong>
+          <span>需要关注维度多（规则/标签/模版/链路/过滤...），无法快速收敛到具体问题所在层级</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🧠</div>
+        <div class="pain-text">
+          <strong>强依赖个人经验，缺乏沉淀</strong>
+          <span>排查逻辑靠老手脑子里的经验，没有系统性知识积累，每次都从零开始</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🏝️</div>
+        <div class="pain-text">
+          <strong>数据分散，信息孤岛</strong>
+          <span>adata / 千寻 / SDK 日志各平台独立，需要手动跨系统拼凑信息，效率极低</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">📦</div>
+        <div class="pain-text">
+          <strong>业务黑盒，链路不透明</strong>
+          <span>广告请求→过滤→出广告的完整链路不可视，出了问题不知道卡在哪个环节</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🔄</div>
+        <div class="pain-text">
+          <strong>流转成本高，找人效率低</strong>
+          <span>自查后仍需找对应研发值班同学；找人、对齐、等回复的过程本身就是时间损耗</span>
+        </div>
+      </div>
+    </div>
+    <div class="meta-note">
+      <span class="meta-note-tag">对应 5/19 共识痛点</span>
+      本模块主攻「技术支持沉淀缺失」「Case 排查难」两大方向：知识库自更新机制解决经验口传问题；多源数据聚合 + AI 归因打通信息孤岛。效果归因难 / 规则配置耗精力由对应模块主攻，本模块侧面支撑。
+    </div>
+  </div>
+
+  <!-- ③ 定位 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="section-num">③</span>
+      模块定位 · 解决什么问题
+    </div>
+    <div class="card">
+      <div class="card-title">✅ 模块做</div>
+      <div class="pain-item">
+        <div class="pain-icon">🔍</div>
+        <div class="pain-text">
+          <strong>结构化信息收集</strong>
+          <span>引导提报人规范填写媒体ID/广告位ID/回包/截图，减少来回拉信息</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">📡</div>
+        <div class="pain-text">
+          <strong>多源数据拉通</strong>
+          <span>adata 业务数据 + 千寻规则/标签 + SDK 日志三源聚合，一屏呈现</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🤖</div>
+        <div class="pain-text">
+          <strong>AI 辅助归因</strong>
+          <span>基于历史 case 知识库 + 当前数据，输出结构化排查路径</span>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">📚</div>
+        <div class="pain-text">
+          <strong>经验自动沉淀</strong>
+          <span>解决方案归档 → 知识库自更新 → Agent 学习积累 → 下次更快</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 四步工作流 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="section-num">④</span>
+      四步工作流 · 主路径
+    </div>
+    <div class="card">
+      <div class="flow-row" style="justify-content: space-around; align-items: flex-start;">
+        <div class="flow-step">
+          <div class="flow-box">Step 1<br>Case 录入</div>
+          <div class="flow-label">结构化表单<br>+ 自然语言双入口</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box">Step 2<br>多源数据拉取</div>
+          <div class="flow-label">adata + 千寻<br>+ SDK 日志</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box">Step 3<br>AI 辅助归因</div>
+          <div class="flow-label">结构化结论<br>+ 相似历史 case</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box green">Step 4<br>处置 &amp; 闭环</div>
+          <div class="flow-label">派单研发<br>+ 归档知识库</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:12px;">
+      <div class="card">
+        <div class="card-title">Prompt 要素清单（必填）</div>
+        <table class="spec-table">
+          <thead><tr><th>字段</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>媒体 ID</td><td>媒体唯一标识</td></tr>
+            <tr><td>广告位 ID</td><td>具体广告位标识</td></tr>
+            <tr><td>问题描述</td><td>现象 + 预期表现</td></tr>
+            <tr><td>广告回包</td><td>JSON 格式，向研发索要</td></tr>
+            <tr><td>截图</td><td>支持直接识别模版 ID</td></tr>
+            <tr><td>模版 ID</td><td>截图识别 or 手动填写</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">问题分级（参考）</div>
+        <table class="spec-table">
+          <thead><tr><th>级别</th><th>判断标准</th><th>处理方向</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-p0">P0</span></td><td>大量媒体受影响、核心场景不出广</td><td>紧急拉研发值班</td></tr>
+            <tr><td><span class="tag tag-p1">P1</span></td><td>单媒体异常、有历史相似 case</td><td>知识库命中后推送</td></tr>
+            <tr><td><span class="tag tag-p2">P2</span></td><td>偶现、单一 case、无规律</td><td>归档观察，知识库沉淀</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 平台打通 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="section-num">⑤</span>
+      平台打通 · 三源数据说明
+    </div>
+    <table class="spec-table" style="background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+      <thead>
+        <tr>
+          <th>平台</th>
+          <th>提供什么数据</th>
+          <th>读取方式</th>
+          <th>权限要求</th>
+          <th>备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-platform">adata</span></td>
+          <td>消耗(万元)、CTR、浅层CVR、竞价eCPM、填充率</td>
+          <td>API 接口 / 内部数据平台</td>
+          <td>业务数据权限</td>
+          <td>需与数据团队对齐口径</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-platform">千寻</span></td>
+          <td>模版标签、规则配置、开关状态、nomatch 原因</td>
+          <td>千寻平台 API</td>
+          <td>千寻平台账号</td>
+          <td>可查标签228等配置项</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-platform">SDK 日志</span></td>
+          <td>客户端请求/响应日志、错误码、渲染链路</td>
+          <td>日志检索平台</td>
+          <td>研发日志权限</td>
+          <td>需研发协助提供接口</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-platform">TAPD</span></td>
+          <td>缺陷单创建与追踪</td>
+          <td>TAPD MCP</td>
+          <td>项目成员权限</td>
+          <td>处置闭环自动创建 Bug</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="meta-note" style="margin-top:12px;">
+      <span class="meta-note-tag">待研发确认</span>
+      adata API 的字段口径 / 千寻 API 的调用方式 / SDK 日志的检索接口 —— 以上均需研发侧 P0 确认后才能在 Demo 中接入真实数据。当前 Demo 为 mock 数据展示流程。
+    </div>
+  </div>
+
+  <!-- ⑥ 知识库自更新机制 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="section-num">⑥</span>
+      知识库自更新机制
+    </div>
+    <div class="card" style="border-color: var(--module-border); border-width: 2px;">
+      <div class="card-title" style="font-size:14px;color:var(--module-color);">💡 最终目标：成为一个越用越聪明的 AI 排查员工</div>
+      <div class="kb-flow" style="margin-top:12px;">
+        <div class="kb-step">
+          <div class="kb-step-num">1</div>
+          <div class="kb-step-content">
+            <strong>用户描述问题 → Agent 解析结构化信息</strong>
+            <p>对话框自然语言输入 → Knot Agent 自动提取：媒体ID / 广告位ID / 问题类型 / 场景 / 严重程度</p>
+            <span class="tag tag-platform">Knot Agent</span><span class="tag tag-platform">Prompt 工程</span>
+          </div>
+        </div>
+        <div class="kb-step">
+          <div class="kb-step-num">2</div>
+          <div class="kb-step-content">
+            <strong>自动追加一行到知识库表格</strong>
+            <p>解析结果 → 自动写入腾讯文档知识库表格，新行标红（解决方案字段待填写）</p>
+            <span class="tag tag-platform">腾讯文档 MCP</span>
+          </div>
+        </div>
+        <div class="kb-step">
+          <div class="kb-step-num">3</div>
+          <div class="kb-step-content">
+            <strong>平台点击推送 → 企微 Agent 通知值班研发</strong>
+            <p>在问题排查平台点击「推送研发」→ 企微侧问题排查 Agent 自动向当周值班研发发送消息，消息内包含问题描述摘要和解决方案填写入口；研发直接在企微 Agent 对话框内回复解决方案，Agent 自动将内容写入知识库表格对应行，无需研发手动打开文档</p>
+            <span class="tag tag-platform">企微 Agent</span><span class="tag tag-platform">问题排查平台</span><span class="tag tag-platform">腾讯文档 MCP</span>
+          </div>
+        </div>
+        <div class="kb-step">
+          <div class="kb-step-num">4</div>
+          <div class="kb-step-content">
+            <strong>Agent 定时巡检 → 学习新解法</strong>
+            <p>Knot 定时任务定期读取知识库表格，读取已填写的解决方案行，更新 Agent 知识库，下次相似问题自动召回</p>
+            <span class="tag tag-platform">Knot Cron</span><span class="tag tag-platform">知识库检索</span>
+          </div>
+        </div>
+        <div class="kb-step">
+          <div class="kb-step-num">5</div>
+          <div class="kb-step-content">
+            <strong>闭环通知 · 主页更新 case 处置结果</strong>
+            <p>问题处置完成后，通知提报人处置结果；主页 case 状态同步更新为「已处置」，方便追踪整体进展</p>
+            <span class="tag tag-platform">问题排查平台</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑦ 协同视角清单（基座要求） -->
+  <div class="section">
+    <div class="section-title">
+      <span class="section-num">⑦</span>
+      协同视角清单 · 基座接口回应
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">1. AI 路由关键词清单 <span class="tag tag-must">必要</span></div>
+      <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="tag tag-platform">不想出样式</span>
+        <span class="tag tag-platform">模板异常</span>
+        <span class="tag tag-platform">case</span>
+        <span class="tag tag-platform">媒体反馈</span>
+        <span class="tag tag-platform">出不了</span>
+        <span class="tag tag-platform">无法展示</span>
+        <span class="tag tag-platform">为什么没有</span>
+        <span class="tag tag-platform">无关闭按钮</span>
+        <span class="tag tag-platform">无倒计时</span>
+      </div>
+      <div class="meta-note" style="margin-top:10px;">
+        <span class="meta-note-tag">触发示例</span>
+        用户输入「媒体101030735429激励视频出不了广告」→ 路由到问题排查模块，自动带入媒体ID参数
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">2. Skills 提报清单 <span class="tag tag-must">必要</span></div>
+      <table class="spec-table">
+        <thead><tr><th>Skill 名称</th><th>用途</th><th>关键词</th><th>类型</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>模版问题快速排查</td>
+            <td>输入媒体ID+截图，自动定位模版ID并拉取千寻标签</td>
+            <td>模版/出不了/截图</td>
+            <td><span class="tag tag-p1">B类</span></td>
+          </tr>
+          <tr>
+            <td>广告回包解析</td>
+            <td>粘贴回包JSON，自动解析关键字段并高亮异常</td>
+            <td>回包/JSON/解析</td>
+            <td><span class="tag tag-p1">B类</span></td>
+          </tr>
+          <tr>
+            <td>研发值班推送</td>
+            <td>一键推送问题描述给当周值班研发</td>
+            <td>推送/值班/派单</td>
+            <td><span class="tag tag-p0">A类</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ⑧ 待对齐事项 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="section-num">⑧</span>
+      待对齐事项 · 需研发协同
+    </div>
+
+    <div class="todo-item">
+      <span class="todo-tag"><span class="tag tag-p0">P0</span></span>
+      <div>
+        <strong>多元数据打通：adata / 千寻 / TAPD 接入方式</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">adata 业务数据 API 字段口径、千寻规则 API 调用方式（能否查询规则命中/nomatch 原因）、TAPD 缺陷单自动创建接口 —— 以上均需研发侧确认后才能接入真实数据</div>
+      </div>
+    </div>
+    <div class="todo-item">
+      <span class="todo-tag"><span class="tag tag-p0">P0</span></span>
+      <div>
+        <strong>广告回包格式与字段定义</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">广告汇报的 JSON 结构有哪些关键字段？哪些字段可用于异常诊断？当前直接转研发处理，需形成结构化文档供 AI 解析</div>
+      </div>
+    </div>
+    <div class="todo-item">
+      <span class="todo-tag"><span class="tag tag-p0">P0</span></span>
+      <div>
+        <strong>SDK 日志检索接口</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">SDK 日志是否可通过媒体ID / 广告位ID 查询？历史排查问题是否有存档可复用？</div>
+      </div>
+    </div>
+    <div class="todo-item">
+      <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
+      <div>
+        <strong>企微 Agent 联动推送 · 研发填写解决方案入口</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">问题排查完成后，Knot 推送消息给对应研发值班同学，并附上解决方案填写入口（企微 Agent 对话框）；研发在对话框内回复解决方案后，由 Agent 自动写入知识库表格，无需研发手动打开腾讯文档。需确认：① 企微侧 Agent 与问题排查模块的联动方式；② 研发接受在企微 Agent 对话框内填写的交互形式</div>
+      </div>
+    </div>
+    <div class="todo-item">
+      <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
+      <div>
+        <strong>截图识别模版 ID 可行性</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">截图能否联动 iDOMO / 千寻预览图识别出模版 ID？目前靠人工判断，AI 识别可大幅提效</div>
+      </div>
+    </div>
+    <div class="todo-item">
+      <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
+      <div>
+        <strong>研发值班排期同步</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">值班表如何与系统同步？推送时如何自动获取当周值班人？建议接入企微值班日历</div>
+      </div>
+    </div>
+    <div class="todo-item">
+      <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
+      <div>
+        <strong>TAPD 缺陷单创建接口权限</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">问题归档时自动在 TAPD 创建 Bug 单，需确认 TAPD MCP 的项目权限及字段映射（复现步骤 / 解决方案 / 关联人）</div>
+      </div>
+    </div>
+    <div class="todo-item">
+      <span class="todo-tag"><span class="tag tag-p2">P2</span></span>
+      <div>
+        <strong>研发现有排查 Skills 融入</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">研发侧是否已有问题排查相关的 Skill / 脚本？如何复用而不是重复建设？</div>
+      </div>
+    </div>
+
+    <div class="meta-note" style="margin-top:16px;">
+      <span class="meta-note-tag">说明</span>
+      以上均为「需研发协同确认」的卡点，当前 Demo 为 mock 数据展示流程。路演后根据反馈逐步对齐，并在决策档案沉淀结论。
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 底部注脚 -->
+  <div style="text-align:center;font-size:12px;color:var(--text-light);line-height:2;">
+    <div>问题排查模块 · 产品定义一页纸 v0.1 · 2026-05-28</div>
+    <div>Owner：姜坤婧 · 配套 <a href="https://jiangkunjing1-dotcom.github.io/xlxx/" target="_blank" style="color:var(--module-color);">可交互 Demo ↗</a> 一起查看</div>
+    <div style="margin-top:6px;color:var(--meta-text);">底稿不是终稿 · 欢迎讨论共识后迭代</div>
+  </div>
+
+</div>
+
+<script>
+function toggleCheck(item) {
+  const check = item.querySelector('.checklist-check');
+  check.classList.toggle('done');
+}
+</script>
+</body>
+</html>
