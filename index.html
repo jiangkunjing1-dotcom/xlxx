@@ -547,6 +547,44 @@ input, textarea, select { font-family: inherit; outline: none; }
 .kb-level-ignore { background: var(--bg); color: var(--text-light); }
 .kb-need-fill { background: #fff5f5; color: var(--danger); border: 1px dashed #feb2b2; font-style: italic; font-size: 11px; padding: 2px 6px; border-radius: 3px; }
 
+/* ===== 排查流程图（按设计图 SVG 还原）===== */
+.flow-modal-body { overflow: auto; flex: 1; min-height: 0; padding: 4px; }
+.flow-stage {
+  position: relative; width: 1060px; height: 900px; margin: 0 auto;
+}
+.flow-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.flow-box {
+  position: absolute; box-sizing: border-box;
+  background: #fff; border: 1.5px solid #b9c2cf; border-radius: 10px;
+  padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.flow-box .fb-title { font-size: 14px; font-weight: 700; color: var(--text); text-align: center; }
+.flow-box .fb-sub { font-size: 11px; color: var(--text-light); margin-top: 4px; text-align: center; line-height: 1.6; }
+.flow-box .fb-list {
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+  text-align: left; font-size: 11.5px; color: var(--text-sub); line-height: 2;
+}
+.flow-box .fb-note { font-size: 10.5px; color: var(--text-light); font-style: italic; margin-top: 8px; }
+/* 紫色强调节点：AI 辅助归因 / 知识库（同色系深浅区分）*/
+.flow-box.purple { background: var(--module-color); border-color: var(--module-color); }
+.flow-box.purple .fb-title { color: #fff; }
+.flow-box.purple .fb-sub { color: #e2d8f7; }
+.flow-box.purple-deep { background: #553c9a; border-color: #553c9a; }
+.flow-box.purple-deep .fb-title { color: #fff; }
+.flow-box.purple-deep .fb-sub { color: #d9cdf0; }
+/* 中间归因小标签 */
+.flow-tag {
+  position: absolute; box-sizing: border-box; background: #fff;
+  border: 1px solid #b9c2cf; border-radius: 8px; padding: 8px 12px; text-align: center;
+}
+.flow-tag .ft-title { font-size: 12.5px; font-weight: 700; color: var(--text); }
+.flow-tag .ft-sub { font-size: 10.5px; color: var(--text-light); margin-top: 3px; }
+/* 竖排小字（反哺 AI 模型）*/
+.flow-vlabel {
+  position: absolute; font-size: 11px; color: var(--text-light);
+  writing-mode: vertical-rl; letter-spacing: 2px;
+}
+
 /* ===== 弹层 ===== */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
@@ -618,6 +656,7 @@ input, textarea, select { font-family: inherit; outline: none; }
     <span class="env-tag">Demo · v0.1</span>
   </div>
   <div class="topbar-right">
+    <a href="#" class="top-link" onclick="showFlowModal()">🔀 排查流程</a>
     <a href="#" class="top-link" onclick="showKbModal()">📋 知识库</a>
     <span class="user">姜坤婧</span>
   </div>
@@ -1129,6 +1168,124 @@ input, textarea, select { font-family: inherit; outline: none; }
 
 </main>
 
+<!-- 排查流程弹层 -->
+<div class="modal-overlay" id="flowModal" onclick="closeFlowModal(event)">
+  <div class="modal" style="max-width:1120px;width:100%;">
+    <div class="modal-title">🔀 问题排查流程</div>
+    <div class="modal-sub">从开发者反馈到知识库沉淀的全链路 · AI 辅助归因贯穿其中，经验自动回流</div>
+    <div class="modal-body flow-modal-body">
+      <div class="flow-stage">
+        <!-- ===== SVG 连接线 ===== -->
+        <svg viewBox="0 0 1060 900" preserveAspectRatio="xMidYMin meet">
+          <defs>
+            <marker id="farrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#8a94a6"></path>
+            </marker>
+            <marker id="farrowd" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#b9c2cf"></path>
+            </marker>
+          </defs>
+          <g fill="none" stroke="#8a94a6" stroke-width="1.5">
+            <!-- ① 开发者 → 两个分支（斜线分叉）-->
+            <path d="M530,86 L250,150" marker-end="url(#farrow)"></path>
+            <path d="M530,86 L810,150" marker-end="url(#farrow)"></path>
+            <!-- ② 运营 → ③ AI（折线汇入右侧）-->
+            <path d="M810,320 C810,360 700,360 660,378" marker-end="url(#farrow)"></path>
+            <!-- ③ AI → 两个归因标签（斜线分叉）-->
+            <path d="M460,440 L330,498" marker-end="url(#farrow)"></path>
+            <path d="M600,440 L730,498" marker-end="url(#farrow)"></path>
+            <!-- 归因标签 → ④ 产品 / 值班研发 -->
+            <path d="M300,548 L260,592" marker-end="url(#farrow)"></path>
+            <path d="M760,548 L800,592" marker-end="url(#farrow)"></path>
+            <!-- ④ → ⑤ 知识库（竖线汇入）-->
+            <path d="M250,690 L250,820" marker-end="url(#farrow)"></path>
+            <path d="M810,690 L810,820" marker-end="url(#farrow)"></path>
+          </g>
+          <!-- 右侧虚线回环：⑤ 知识库 → ③ AI（反哺）-->
+          <g fill="none" stroke="#b9c2cf" stroke-width="1.5" stroke-dasharray="6 5">
+            <path d="M1010,840 L1010,409 L668,409" marker-end="url(#farrowd)"></path>
+          </g>
+        </svg>
+
+        <!-- ===== 节点 ===== -->
+        <!-- ① 开发者 -->
+        <div class="flow-box" style="left:410px;top:30px;width:240px;">
+          <div class="fb-title">① 开发者</div>
+          <div class="fb-sub">在群内反馈问题</div>
+        </div>
+
+        <!-- ② 分支1 技术支持 -->
+        <div class="flow-box" style="left:60px;top:150px;width:380px;">
+          <div class="fb-title">② 分支1 · 技术支持</div>
+          <div class="fb-sub">承接接入侧技术问题</div>
+          <div class="fb-list">
+            • 媒体 / 资质 / 合作<br>
+            • SDK 接入 / 错误码<br>
+            • 结算 / 权限 / 后台账号<br>
+            • 数据指标咨询 · 业务规范
+          </div>
+          <div class="fb-note">共 19 个二级问题域</div>
+        </div>
+
+        <!-- ② 分支2 运营 -->
+        <div class="flow-box" style="left:620px;top:150px;width:380px;">
+          <div class="fb-title">② 分支2 · 运营</div>
+          <div class="fb-sub">承接形态/模板/规则相关问题</div>
+          <div class="fb-sub" style="margin-top:14px;">复杂问题<br>↓<br>调用 AI 辅助归因</div>
+        </div>
+
+        <!-- ③ AI 辅助归因（紫色）-->
+        <div class="flow-box purple" style="left:330px;top:378px;width:400px;">
+          <div class="fb-title">③ AI 辅助归因</div>
+          <div class="fb-sub">基于问题描述自动初步定位 · 给出归因结论</div>
+        </div>
+
+        <!-- 归因标签 · 标签/规则类 -->
+        <div class="flow-tag" style="left:200px;top:498px;width:250px;">
+          <div class="ft-title">归因 · 标签 / 规则类</div>
+          <div class="ft-sub">不需要某样式 / 需要某样式</div>
+        </div>
+        <!-- 归因标签 · 各场景 Badcase -->
+        <div class="flow-tag" style="left:610px;top:498px;width:250px;">
+          <div class="ft-title">归因 · 各场景 Badcase</div>
+          <div class="ft-sub">模板渲染 / SDK Bug / 链路异常</div>
+        </div>
+
+        <!-- ④ 产品 -->
+        <div class="flow-box" style="left:80px;top:592px;width:340px;">
+          <div class="fb-title">④ 产品</div>
+          <div class="fb-sub">规则配置调整 / 标签策略优化<br>形态产品迭代决策</div>
+        </div>
+        <!-- ④ 值班研发 -->
+        <div class="flow-box" style="left:640px;top:592px;width:340px;">
+          <div class="fb-title">④ 值班研发</div>
+          <div class="fb-sub">模板自查 / SDK 配置核对<br>代码层面问题修复</div>
+        </div>
+
+        <!-- 解决方案沉淀 文字 -->
+        <div class="flow-vlabel" style="left:236px;top:712px;height:90px;writing-mode:horizontal-tb;">
+          <span style="font-size:11px;color:var(--text-light);">解决方案沉淀</span>
+        </div>
+        <div class="flow-vlabel" style="left:796px;top:712px;height:90px;writing-mode:horizontal-tb;">
+          <span style="font-size:11px;color:var(--text-light);">解决方案沉淀</span>
+        </div>
+
+        <!-- ⑤ 问题归因知识库（紫色·稍深）-->
+        <div class="flow-box purple-deep" style="left:60px;top:820px;width:940px;">
+          <div class="fb-title">⑤ 问题归因知识库</div>
+          <div class="fb-sub">问题描述 + 排查路径 + 归因结论 + 解决方案</div>
+        </div>
+
+        <!-- 右侧竖排：反哺 AI 模型 -->
+        <div class="flow-vlabel" style="left:1022px;top:560px;">反哺 AI 模型</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="closeFlowModalBtn()">知道了</button>
+    </div>
+  </div>
+</div>
+
 <!-- 知识库弹层 -->
 <div class="modal-overlay" id="kbModal" onclick="closeKbModal(event)">
   <div class="modal" style="max-width:1100px;width:100%;">
@@ -1531,6 +1688,19 @@ function submitArchive() {
 
 function closeCaseFlow() {
   showSuccess('Case 已闭环 🎉', '已同步：知识库归档 + TAPD 缺陷 + 研发通知');
+}
+
+// ===== 排查流程弹层 =====
+function showFlowModal() {
+  document.getElementById('flowModal').classList.add('show');
+}
+
+function closeFlowModal(e) {
+  if (e.target === document.getElementById('flowModal')) closeFlowModalBtn();
+}
+
+function closeFlowModalBtn() {
+  document.getElementById('flowModal').classList.remove('show');
 }
 
 // ===== 知识库弹层 =====
