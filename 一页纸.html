@@ -140,18 +140,21 @@ a { color: inherit; text-decoration: none; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 @media (max-width: 700px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
 
-/* ===== 流程图 ===== */
+/* ===== 流程图（横向均分 · 等宽等高 · 箭头居中）===== */
 .flow-row {
-  display: flex; align-items: flex-start; gap: 8px;
-  flex-wrap: wrap; margin-bottom: 8px;
+  display: flex; align-items: stretch; gap: 6px;
+  flex-wrap: nowrap; margin-bottom: 8px;
 }
 .flow-step {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  min-width: 80px;
+  flex: 1 1 0; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
 }
 .flow-box {
-  padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
-  text-align: center; white-space: nowrap;
+  width: 100%; box-sizing: border-box;
+  min-height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  text-align: center; line-height: 1.4;
   background: var(--module-light); color: var(--module-color);
   border: 1px solid var(--module-border);
 }
@@ -159,9 +162,11 @@ a { color: inherit; text-decoration: none; }
 .flow-box.orange { background: #fffaf0; color: var(--accent); border-color: #fbd38d; }
 .flow-box.gray { background: var(--bg); color: var(--text-sub); border-color: var(--border); }
 .flow-arrow {
-  font-size: 16px; color: var(--border-strong); padding-top: 10px; flex-shrink: 0;
+  flex: 0 0 auto; align-self: flex-start;
+  height: 56px; display: flex; align-items: center;
+  font-size: 18px; color: var(--border-strong);
 }
-.flow-label { font-size: 10px; color: var(--text-light); text-align: center; max-width: 80px; }
+.flow-label { font-size: 10.5px; color: var(--text-light); text-align: center; line-height: 1.4; }
 
 /* ===== 表格 ===== */
 .spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -259,40 +264,40 @@ a { color: inherit; text-decoration: none; }
 /* ===== divider ===== */
 .divider { border: none; border-top: 1px dashed var(--border); margin: 32px 0; }
 
-/* ===== 理想态排查流程图（按设计图 SVG 还原）===== */
-.flow-wrap { overflow-x: auto; padding: 4px 0 8px; }
-.flow-stage {
+/* ===== 理想态排查流程图（按设计图 SVG 还原，独立命名空间 idl-）===== */
+.idl-wrap { overflow-x: auto; padding: 4px 0 8px; }
+.idl-stage {
   position: relative; width: 1060px; height: 900px; margin: 0 auto;
 }
-.flow-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.flow-box {
+.idl-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.idl-box {
   position: absolute; box-sizing: border-box;
   background: #fff; border: 1.5px solid #b9c2cf; border-radius: 10px;
   padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-.flow-box .fb-title { font-size: 14px; font-weight: 700; color: var(--text); text-align: center; }
-.flow-box .fb-sub { font-size: 11px; color: var(--text-light); margin-top: 4px; text-align: center; line-height: 1.6; }
-.flow-box .fb-list {
+.idl-box .fb-title { font-size: 14px; font-weight: 700; color: var(--text); text-align: center; }
+.idl-box .fb-sub { font-size: 11px; color: var(--text-light); margin-top: 4px; text-align: center; line-height: 1.6; }
+.idl-box .fb-list {
   margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
   text-align: left; font-size: 11.5px; color: var(--text-sub); line-height: 2;
 }
-.flow-box .fb-note { font-size: 10.5px; color: var(--text-light); font-style: italic; margin-top: 8px; }
+.idl-box .fb-note { font-size: 10.5px; color: var(--text-light); font-style: italic; margin-top: 8px; }
 /* 紫色强调节点：AI 辅助归因 / 知识库（同色系深浅区分）*/
-.flow-box.purple { background: var(--module-color); border-color: var(--module-color); }
-.flow-box.purple .fb-title { color: #fff; }
-.flow-box.purple .fb-sub { color: #e2d8f7; }
-.flow-box.purple-deep { background: #553c9a; border-color: #553c9a; }
-.flow-box.purple-deep .fb-title { color: #fff; }
-.flow-box.purple-deep .fb-sub { color: #d9cdf0; }
+.idl-box.purple { background: var(--module-color); border-color: var(--module-color); }
+.idl-box.purple .fb-title { color: #fff; }
+.idl-box.purple .fb-sub { color: #e2d8f7; }
+.idl-box.purple-deep { background: #553c9a; border-color: #553c9a; }
+.idl-box.purple-deep .fb-title { color: #fff; }
+.idl-box.purple-deep .fb-sub { color: #d9cdf0; }
 /* 中间归因小标签 */
-.flow-tag {
+.idl-tag {
   position: absolute; box-sizing: border-box; background: #fff;
   border: 1px solid #b9c2cf; border-radius: 8px; padding: 8px 12px; text-align: center;
 }
-.flow-tag .ft-title { font-size: 12.5px; font-weight: 700; color: var(--text); }
-.flow-tag .ft-sub { font-size: 10.5px; color: var(--text-light); margin-top: 3px; }
+.idl-tag .ft-title { font-size: 12.5px; font-weight: 700; color: var(--text); }
+.idl-tag .ft-sub { font-size: 10.5px; color: var(--text-light); margin-top: 3px; }
 /* 竖排小字（反哺 AI 模型）*/
-.flow-vlabel {
+.idl-vlabel {
   position: absolute; font-size: 11px; color: var(--text-light);
   writing-mode: vertical-rl; letter-spacing: 2px;
 }
@@ -361,7 +366,7 @@ a { color: inherit; text-decoration: none; }
       现有排查流程 · 现状梳理
     </div>
     <div class="card">
-      <div class="flow-row" style="justify-content: flex-start; align-items: flex-start; flex-wrap: wrap; gap: 6px;">
+      <div class="flow-row">
         <div class="flow-step">
           <div class="flow-box gray">媒体反馈问题</div>
           <div class="flow-label">媒体侧发现异常</div>
@@ -473,10 +478,10 @@ a { color: inherit; text-decoration: none; }
     </div>
     <div class="card">
       <div class="card-title">从开发者反馈到知识库沉淀的完整闭环 · AI 辅助归因贯穿其中，经验自动回流</div>
-      <div class="flow-wrap">
-        <div class="flow-stage">
-          <!-- ===== SVG 连接线 ===== -->
-          <svg viewBox="0 0 1060 900" preserveAspectRatio="xMidYMin meet">
+      <div class="idl-wrap">
+        <div class="idl-stage">
+          <!-- ===== SVG 连接线（铺满整个 stage，自适应缩放）===== -->
+          <svg viewBox="0 0 1060 900" preserveAspectRatio="none">
             <defs>
               <marker id="farrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
                 <path d="M0,0 L6,3 L0,6 Z" fill="#8a94a6"></path>
@@ -485,37 +490,37 @@ a { color: inherit; text-decoration: none; }
                 <path d="M0,0 L6,3 L0,6 Z" fill="#b9c2cf"></path>
               </marker>
             </defs>
-            <g fill="none" stroke="#8a94a6" stroke-width="1.5">
+            <g fill="none" stroke="#8a94a6" stroke-width="2" vector-effect="non-scaling-stroke">
               <!-- ① 开发者 → 两个分支（斜线分叉）-->
               <path d="M530,86 L250,150" marker-end="url(#farrow)"></path>
               <path d="M530,86 L810,150" marker-end="url(#farrow)"></path>
               <!-- ② 运营 → ③ AI（折线汇入右侧）-->
-              <path d="M810,320 C810,360 700,360 660,378" marker-end="url(#farrow)"></path>
+              <path d="M810,320 C810,360 700,362 662,378" marker-end="url(#farrow)"></path>
               <!-- ③ AI → 两个归因标签（斜线分叉）-->
-              <path d="M460,440 L330,498" marker-end="url(#farrow)"></path>
-              <path d="M600,440 L730,498" marker-end="url(#farrow)"></path>
+              <path d="M460,442 L335,496" marker-end="url(#farrow)"></path>
+              <path d="M600,442 L725,496" marker-end="url(#farrow)"></path>
               <!-- 归因标签 → ④ 产品 / 值班研发 -->
-              <path d="M300,548 L260,592" marker-end="url(#farrow)"></path>
-              <path d="M760,548 L800,592" marker-end="url(#farrow)"></path>
+              <path d="M300,556 L255,590" marker-end="url(#farrow)"></path>
+              <path d="M760,556 L805,590" marker-end="url(#farrow)"></path>
               <!-- ④ → ⑤ 知识库（竖线汇入）-->
-              <path d="M250,690 L250,820" marker-end="url(#farrow)"></path>
-              <path d="M810,690 L810,820" marker-end="url(#farrow)"></path>
+              <path d="M250,690 L250,818" marker-end="url(#farrow)"></path>
+              <path d="M810,690 L810,818" marker-end="url(#farrow)"></path>
             </g>
             <!-- 右侧虚线回环：⑤ 知识库 → ③ AI（反哺）-->
-            <g fill="none" stroke="#b9c2cf" stroke-width="1.5" stroke-dasharray="6 5">
-              <path d="M1010,840 L1010,409 L668,409" marker-end="url(#farrowd)"></path>
+            <g fill="none" stroke="#b9c2cf" stroke-width="1.5" stroke-dasharray="6 5" vector-effect="non-scaling-stroke">
+              <path d="M1012,838 L1012,409 L672,409" marker-end="url(#farrowd)"></path>
             </g>
           </svg>
 
-          <!-- ===== 节点 ===== -->
+          <!-- ===== 节点（百分比定位，随容器等比缩放）===== -->
           <!-- ① 开发者 -->
-          <div class="flow-box" style="left:410px;top:30px;width:240px;">
+          <div class="idl-box" style="left:38.7%;top:3.3%;width:22.6%;">
             <div class="fb-title">① 开发者</div>
             <div class="fb-sub">在群内反馈问题</div>
           </div>
 
           <!-- ② 分支1 技术支持 -->
-          <div class="flow-box" style="left:60px;top:150px;width:380px;">
+          <div class="idl-box" style="left:5.7%;top:16.7%;width:35.8%;">
             <div class="fb-title">② 分支1 · 技术支持</div>
             <div class="fb-sub">承接接入侧技术问题</div>
             <div class="fb-list">
@@ -528,52 +533,52 @@ a { color: inherit; text-decoration: none; }
           </div>
 
           <!-- ② 分支2 运营 -->
-          <div class="flow-box" style="left:620px;top:150px;width:380px;">
+          <div class="idl-box" style="left:58.5%;top:16.7%;width:35.8%;">
             <div class="fb-title">② 分支2 · 运营</div>
             <div class="fb-sub">承接形态/模板/规则相关问题</div>
             <div class="fb-sub" style="margin-top:14px;">复杂问题<br>↓<br>调用 AI 辅助归因</div>
           </div>
 
           <!-- ③ AI 辅助归因（紫色）-->
-          <div class="flow-box purple" style="left:330px;top:378px;width:400px;">
+          <div class="idl-box purple" style="left:31.1%;top:42%;width:37.7%;">
             <div class="fb-title">③ AI 辅助归因</div>
             <div class="fb-sub">基于问题描述自动初步定位 · 给出归因结论</div>
           </div>
 
           <!-- 归因标签 · 标签/规则类 -->
-          <div class="flow-tag" style="left:200px;top:498px;width:250px;">
+          <div class="idl-tag" style="left:18.9%;top:55.3%;width:23.6%;">
             <div class="ft-title">归因 · 标签 / 规则类</div>
             <div class="ft-sub">不需要某样式 / 需要某样式</div>
           </div>
           <!-- 归因标签 · 各场景 Badcase -->
-          <div class="flow-tag" style="left:610px;top:498px;width:250px;">
+          <div class="idl-tag" style="left:57.5%;top:55.3%;width:23.6%;">
             <div class="ft-title">归因 · 各场景 Badcase</div>
             <div class="ft-sub">模板渲染 / SDK Bug / 链路异常</div>
           </div>
 
           <!-- ④ 产品 -->
-          <div class="flow-box" style="left:80px;top:592px;width:340px;">
+          <div class="idl-box" style="left:7.5%;top:65.8%;width:32.1%;">
             <div class="fb-title">④ 产品</div>
             <div class="fb-sub">规则配置调整 / 标签策略优化<br>形态产品迭代决策</div>
           </div>
           <!-- ④ 值班研发 -->
-          <div class="flow-box" style="left:640px;top:592px;width:340px;">
+          <div class="idl-box" style="left:60.4%;top:65.8%;width:32.1%;">
             <div class="fb-title">④ 值班研发</div>
             <div class="fb-sub">模板自查 / SDK 配置核对<br>代码层面问题修复</div>
           </div>
 
           <!-- 解决方案沉淀 文字 -->
-          <div style="position:absolute;left:236px;top:712px;font-size:11px;color:var(--text-light);">解决方案沉淀</div>
-          <div style="position:absolute;left:796px;top:712px;font-size:11px;color:var(--text-light);">解决方案沉淀</div>
+          <div style="position:absolute;left:22.3%;top:79.1%;font-size:11px;color:var(--text-light);">解决方案沉淀</div>
+          <div style="position:absolute;left:75.1%;top:79.1%;font-size:11px;color:var(--text-light);">解决方案沉淀</div>
 
           <!-- ⑤ 问题归因知识库（紫色·稍深）-->
-          <div class="flow-box purple-deep" style="left:60px;top:820px;width:940px;">
+          <div class="idl-box purple-deep" style="left:5.7%;top:91.1%;width:88.7%;">
             <div class="fb-title">⑤ 问题归因知识库</div>
             <div class="fb-sub">问题描述 + 排查路径 + 归因结论 + 解决方案</div>
           </div>
 
           <!-- 右侧竖排：反哺 AI 模型 -->
-          <div class="flow-vlabel" style="left:1022px;top:560px;">反哺 AI 模型</div>
+          <div class="idl-vlabel" style="left:96.4%;top:62%;">反哺 AI 模型</div>
         </div>
       </div>
     </div>
@@ -629,7 +634,7 @@ a { color: inherit; text-decoration: none; }
       四步工作流 · 主路径
     </div>
     <div class="card">
-      <div class="flow-row" style="justify-content: space-around; align-items: flex-start;">
+      <div class="flow-row">
         <div class="flow-step">
           <div class="flow-box">Step 1<br>Case 录入</div>
           <div class="flow-label">结构化表单<br>+ 自然语言双入口</div>
@@ -851,57 +856,43 @@ a { color: inherit; text-decoration: none; }
     <div class="todo-item">
       <span class="todo-tag"><span class="tag tag-p0">P0</span></span>
       <div>
-        <strong>多元数据打通：adata / 千寻 / TAPD 接入方式</strong>
-        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">adata 业务数据 API 字段口径、千寻规则 API 调用方式（能否查询规则命中/nomatch 原因）、TAPD 缺陷单自动创建接口 —— 以上均需研发侧确认后才能接入真实数据</div>
+        <strong>研发现有沉淀输入</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">明确可用于诊断的关键字段（如回包中的 JSON 结构），复用研发已有排查脚本 / Skill，避免重复建设</div>
       </div>
     </div>
     <div class="todo-item">
       <span class="todo-tag"><span class="tag tag-p0">P0</span></span>
       <div>
-        <strong>广告回包格式与字段定义</strong>
-        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">广告汇报的 JSON 结构有哪些关键字段？哪些字段可用于异常诊断？当前直接转研发处理，需形成结构化文档供 AI 解析</div>
-      </div>
-    </div>
-    <div class="todo-item">
-      <span class="todo-tag"><span class="tag tag-p0">P0</span></span>
-      <div>
-        <strong>SDK 日志检索接口</strong>
-        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">SDK 日志是否可通过媒体ID / 广告位ID 查询？历史排查问题是否有存档可复用？</div>
+        <strong>多元数据打通</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">（adata / 千寻 / TAPD）字段口径、调用方式、缺陷自动创建接口</div>
       </div>
     </div>
     <div class="todo-item">
       <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
       <div>
-        <strong>企微 Agent 联动推送 · 研发填写解决方案入口</strong>
-        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">问题排查完成后，Knot 推送消息给对应研发值班同学，并附上解决方案填写入口（企微 Agent 对话框）；研发在对话框内回复解决方案后，由 Agent 自动写入知识库表格，无需研发手动打开腾讯文档。需确认：① 企微侧 Agent 与问题排查模块的联动方式；② 研发接受在企微 Agent 对话框内填写的交互形式</div>
-      </div>
-    </div>
-    <div class="todo-item">
-      <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
-      <div>
-        <strong>截图识别模版 ID 可行性</strong>
-        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">截图能否联动 iDOMO / 千寻预览图识别出模版 ID？目前靠人工判断，AI 识别可大幅提效</div>
+        <strong>截图识别模版 ID</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">截图能否联动 iDOMO / 千寻预览图识别模版</div>
       </div>
     </div>
     <div class="todo-item">
       <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
       <div>
         <strong>研发值班排期同步</strong>
-        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">值班表如何与系统同步？推送时如何自动获取当周值班人？建议接入企微值班日历</div>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">值班表如何与系统同步、推送时自动取当周值班人</div>
       </div>
     </div>
     <div class="todo-item">
       <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
       <div>
-        <strong>TAPD 缺陷单创建接口权限</strong>
-        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">问题归档时自动在 TAPD 创建 Bug 单，需确认 TAPD MCP 的项目权限及字段映射（复现步骤 / 解决方案 / 关联人）</div>
+        <strong>企微 Agent 联动推送</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">企微侧 Agent 与模块联动、研发在企微填写解决方案的交互</div>
       </div>
     </div>
     <div class="todo-item">
-      <span class="todo-tag"><span class="tag tag-p2">P2</span></span>
+      <span class="todo-tag"><span class="tag tag-p1">P1</span></span>
       <div>
-        <strong>研发现有排查 Skills 融入</strong>
-        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">研发侧是否已有问题排查相关的 Skill / 脚本？如何复用而不是重复建设？</div>
+        <strong>TAPD 创建接口权限</strong>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:3px;">自动建 Bug 的项目权限与字段映射</div>
       </div>
     </div>
 
